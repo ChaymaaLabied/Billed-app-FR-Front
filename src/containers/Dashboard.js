@@ -97,7 +97,7 @@ export default class {
       $('.vertical-navbar').css({ height: '150vh' })
       this.counter ++ 
     } else {
-      $(`#open-bill${bill.id}`).css({ background: '#0D5AE5' })
+      $(`#open-bill${bill.id}`).css({ background: '#0D5AE5' }) // khass nraja3 bill 
 
       $('.dashboard-right-container div').html(`
         <div id="big-billed-icon" data-testid="big-billed-icon"> ${BigBilledIcon} </div>
@@ -146,6 +146,7 @@ export default class {
     }
 
     bills.forEach(bill => {
+      $(`#open-bill${bill.id}`).off('click');
       $(`#open-bill${bill.id}`).click((e) => {
       console.log(bill.id)
       this.handleEditTicket(e, bill, bills)
