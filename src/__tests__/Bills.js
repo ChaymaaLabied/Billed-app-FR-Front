@@ -8,12 +8,13 @@ import "@testing-library/jest-dom/extend-expect";
 import { fireEvent, screen, waitFor } from "@testing-library/dom";
 import BillsUI from "../views/BillsUI.js";
 import { bills } from "../fixtures/bills.js";
-import mockStore from "../__mocks__/store"
+import mockStore from "../__mocks__/store";
 import { ROUTES_PATH, ROUTES } from "../constants/routes.js";
 import { localStorageMock } from "../__mocks__/localStorage.js";
 import BillsContainer from "../containers/Bills.js";
 
 import router from "../app/Router.js";
+jest.mock("../app/Store", () => mockStore);
 
 describe("Given I am connected as an employee", () => {
   describe("When I am on Bills Page", () => {
@@ -50,11 +51,25 @@ describe("Given I am connected as an employee", () => {
     });
     describe("And I click on <<Nouvelle note de frais>> button", () => {
       test("then handleClickNewBill has to be called ", () => {
+        Object.defineProperty(window, "localStorage", {
+          value: localStorageMock,
+        });
+
+        window.localStorage.setItem(
+          "user",
+          JSON.stringify({
+            type: "Employee",
+          })
+        );
         const root = document.createElement("div");
         root.setAttribute("id", "root");
         document.body.append(root);
         router();
 
+
+        const onNavigate = (pathname) => {
+          document.body.innerHTML = ROUTES({ pathname });
+        };
         const bill = new BillsContainer({
           document,
           onNavigate,
@@ -63,16 +78,14 @@ describe("Given I am connected as an employee", () => {
         });
 
         const handleClickNewBillSpy = jest.spyOn(bill, "handleClickNewBill");
-
         const btnNewBill = screen.getByTestId("btn-new-bill");
         //b
         btnNewBill.addEventListener("click", bill.handleClickNewBill);
-
         fireEvent.click(btnNewBill);
         expect(handleClickNewBillSpy).toBeCalled();
       });
 
-      test("Then the New Bill Form should be displayed", () => {
+      test("Then the New Bill Form should be displayed", async () => {
         const envoyerUneNoteDeFrais = screen.getByText(
           "Envoyer une note de frais"
         );
@@ -112,14 +125,22 @@ describe("Given I am connected as an employee", () => {
 describe("Given I am connected as an employee", () => {
   describe("When I navigate to bills page", () => {
     test("fetches bills from mock API GET", async () => {
-      localStorage.setItem("user", JSON.stringify({type: "Employee", email: "a@a"}));
+      localStorage.setItem(
+        "user",
+        JSON.stringify({ type: "Employee", email: "a@a" })
+      );
       const root = document.createElement("div");
       root.setAttribute("id", "root");
       document.body.append(root);
       router();
-      window.onNavigate(ROUTES_PATH.Bills); 
+      window.onNavigate(ROUTES_PATH.Bills);
       const store = mockStore;
-      const bill = new Bills({document, onNavigate, store, localStorage});
+      const bill = new BillsContainer({
+        document,
+        onNavigate,
+        store,
+        localStorage,
+      });
       await bill.getBills();
     });
     describe("When an error occurs on API", () => {
