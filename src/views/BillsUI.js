@@ -20,7 +20,7 @@ const row = (bill) => {
   }
 
 const rows = (data) => {
-  const antiChrono = (a, b) => ((a.date < b.date) ? 1 : -1)
+  const antiChrono = (a, b) => ((a.date < b.date) ? 1 : -1) // la ligne que j'ai ajouté pour traiter le tri 
   return (data && data.length) ? data.sort(antiChrono).map(bill => row(bill)).join("") : ""
 }
 

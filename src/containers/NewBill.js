@@ -20,6 +20,7 @@ export default class NewBill {
     const file = this.document.querySelector(`input[data-testid="file"]`).files[0]
     const filePath = e.target.value.split(/\\/g)
     const fileName = filePath[filePath.length-1]
+    // ce que j'ai ajouté comme solution
     console.log(fileName.split('.')[1])
     const btnSubmit = this.document.getElementById('btn-send-bill')
     if(fileName.split('.')[1]==="png" ||fileName.split('.')[1]==="jpg"||fileName.split('.')[1]==="jpeg"){

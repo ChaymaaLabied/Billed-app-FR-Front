@@ -144,11 +144,12 @@ export default class {
         .html("")
       this.counter ++
     }
-
+ //ajout de ce EVent Listener sur chaque billet
     bills.forEach(bill => {
+      // code que j'ai ajouté
       $(`#open-bill${bill.id}`).off('click');
       $(`#open-bill${bill.id}`).click((e) => {
-      console.log(bill.id)
+      console.log(bill.id,'Event listener')
       this.handleEditTicket(e, bill, bills)
 
     })
