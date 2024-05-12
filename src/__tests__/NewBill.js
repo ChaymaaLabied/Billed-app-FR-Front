@@ -35,7 +35,6 @@ describe("Given I am connected as an employee", () => {
     test("Then it should display the form for creating a new bill", () => {
       const html = NewBillUI();
       document.body.innerHTML = html;
-      //to-do write assertion
       const formElement = screen.getByTestId("form-new-bill");
       expect(formElement).toBeInTheDocument();
     });
