@@ -14,7 +14,7 @@ import { localStorageMock } from "../__mocks__/localStorage.js";
 import BillsContainer from "../containers/Bills.js";
 
 import router from "../app/Router.js";
-jest.mock("../app/Store", () => mockStore);
+jest.mock("../app/Store", () => mockStore); // pouvoir utiliser mockedStore instead of store 
 
 describe("Given I am connected as an employee", () => {
   describe("When I am on Bills Page", () => {
@@ -53,46 +53,45 @@ describe("Given I am connected as an employee", () => {
       test("then handleClickNewBill has to be called ", () => {
         Object.defineProperty(window, "localStorage", {
           value: localStorageMock,
-        });
+        }); // utilisation des données mockées pour le test
 
         window.localStorage.setItem(
           "user",
           JSON.stringify({
             type: "Employee",
           })
-        );
+        ); // on est sur le parcours employé
         const root = document.createElement("div");
         root.setAttribute("id", "root");
         document.body.append(root);
-        router();
+        router();// fct qui prend le chemin comme parametre et affiche la page associée 
 
 
         const onNavigate = (pathname) => {
           document.body.innerHTML = ROUTES({ pathname });
-        };
+        }; // fct de navigation entre les pages de l'application 
         const bill = new BillsContainer({
           document,
           onNavigate,
           store: null,
           localStorage,
-        });
+        }); // instanciation de la classe billsContainer
 
-        const handleClickNewBillSpy = jest.spyOn(bill, "handleClickNewBill");
+        const handleClickNewBillSpy = jest.spyOn(bill, "handleClickNewBill"); // espionner la méthode handleCli.. de l'objet bill
         const btnNewBill = screen.getByTestId("btn-new-bill");
-        //b
         btnNewBill.addEventListener("click", bill.handleClickNewBill);
         fireEvent.click(btnNewBill);
-        expect(handleClickNewBillSpy).toBeCalled();
+        expect(handleClickNewBillSpy).toBeCalled(); // on a fait le spy car toBecalled()... marche juste avec le spy
       });
-
+      // delet async
       test("Then the New Bill Form should be displayed", async () => {
         const envoyerUneNoteDeFrais = screen.getByText(
           "Envoyer une note de frais"
-        );
+        ); 
         expect(envoyerUneNoteDeFrais).toBeInTheDocument();
       });
     });
-
+// tester l'evenement click sur l'icon et l'ouverture de la modalz
     describe("And I click on EyeIcon for first bill", () => {
       test("Then Modal should be opened", async () => {
         document.body.innerHTML = BillsUI({ data: [bills[0]] });
@@ -112,7 +111,7 @@ describe("Given I am connected as an employee", () => {
         const spyClickIconEye = jest.spyOn(bill, "handleClickIconEye");
         const eyeIcon = screen.getByTestId("icon-eye");
         $.fn.modal = jest.fn();
-        fireEvent.click(eyeIcon);
+        fireEvent.click(eyeIcon); // simuler le event listner click sur l'envi de test jest
         expect(spyClickIconEye).toBeCalledTimes(1);
         const modale = screen.getByText("Justificatif");
         expect(modale).toBeTruthy();
@@ -132,16 +131,17 @@ describe("Given I am connected as an employee", () => {
       const root = document.createElement("div");
       root.setAttribute("id", "root");
       document.body.append(root);
-      router();
+      router(); // la div root pour contenir la page en fonction du chemin choisi
       window.onNavigate(ROUTES_PATH.Bills);
-      const store = mockStore;
+      const store = mockStore; // car on teste la fct getbills on aura besoin des données mockées
       const bill = new BillsContainer({
         document,
         onNavigate,
         store,
         localStorage,
       });
-      await bill.getBills();
+      await bill.getBills(); 
+      // no expect because on attend l'execution de la fct sans erreur
     });
     describe("When an error occurs on API", () => {
       beforeEach(() => {
@@ -160,6 +160,7 @@ describe("Given I am connected as an employee", () => {
         document.body.appendChild(root);
         router();
       });
+      //erreur 404 :ressource not found 
       test("fetches bills from an API and fails with 404 message error", async () => {
         mockStore.bills.mockImplementationOnce(() => {
           return {
@@ -173,7 +174,7 @@ describe("Given I am connected as an employee", () => {
         const message = screen.getByText(/Erreur 404/);
         expect(message).toBeTruthy();
       });
-
+      // erreur 500 : problème serveur généralement 
       test("fetches messages from an API and fails with 500 message error", async () => {
         mockStore.bills.mockImplementationOnce(() => {
           return {

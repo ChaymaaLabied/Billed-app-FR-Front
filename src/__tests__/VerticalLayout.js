@@ -19,8 +19,8 @@ describe("Given I am connected as Employee", () => {
     expect(screen.getByTestId("icon-mail")).toBeTruthy();
   });
 });
-
-describe("Given I am not conencted as an Employee", () => {
+//test que j'ai ajouté 
+describe("Given I am not connected as an Employee", () => {
   test("Then only DisconnectIcon should be rendered", () => {
     Object.defineProperty(window, "localStorage", { value: localStorageMock });
     const user = JSON.stringify({});

@@ -36,18 +36,17 @@ describe("Given I am connected as an employee", () => {
       const html = NewBillUI();
       document.body.innerHTML = html;
       const formElement = screen.getByTestId("form-new-bill");
-      expect(formElement).toBeInTheDocument();
+      expect(formElement).toBeInTheDocument(); // ce que j'ai ajouté 
     });
-
+      // on teste si la fct handlechangefile teste bien l'extension des fichiers uploaded
     describe('When I Upload a valid extension',()=>{
       test("Then file  upload is valid", async () => {
         document.body.innerHTML = NewBillUI();
        const file = new File(["Test image"], "testImage.jpg", {
          type: "image/png",
-       });
+       }); // simuler le fichier que l'utilisateur va uploadé
        const input = screen.getByTestId("file");
        const preventDefault = jest.fn();
-       window.alert = jest.fn();
        const event = {
          preventDefault,
          target: { files: [file] },
@@ -97,8 +96,8 @@ describe("Given I am connected as an employee", () => {
        const mockHandleChangeFile = jest.fn((e) => {
          newBill.handleChangeFile(event);
        });
-       input.addEventListener("change", mockHandleChangeFile);
-       fireEvent.change(input, event);
+       input.addEventListener("change", mockHandleChangeFile); // on ajoute un eventListner
+       fireEvent.change(input, event); // on simule l'envent 
  
        expect(mockHandleChangeFile).toHaveBeenCalled();
         expect(windowAlertMock).toBeCalled();
@@ -116,7 +115,7 @@ describe("Given I am connected as an employee", () => {
           localStorage,
         });
 
-        const handleSubmit = jest.fn((e) => newBill.handleSubmit(e));
+        const handleSubmit = jest.fn((e) => newBill.handleSubmit(e)); // on a mocké la fct handlesumbit
         const formNewBill = screen.getByTestId("form-new-bill");
         formNewBill.addEventListener("submit", handleSubmit);
 
@@ -161,7 +160,7 @@ describe("When an error occurs on API", () => {
     mockStore.bills.mockImplementationOnce(() => {
       return {
         create: () => {
-          return Promise.reject(new Error("Erreur 500"));
+          return Promise.reject(error500);
         },
       };
     });
