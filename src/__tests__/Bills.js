@@ -91,7 +91,7 @@ describe("Given I am connected as an employee", () => {
         expect(envoyerUneNoteDeFrais).toBeInTheDocument();
       });
     });
-// tester l'evenement click sur l'icon et l'ouverture de la modalz
+// tester l'evenement click sur l'icon et l'ouverture de la modale
     describe("And I click on EyeIcon for first bill", () => {
       test("Then Modal should be opened", async () => {
         document.body.innerHTML = BillsUI({ data: [bills[0]] });
